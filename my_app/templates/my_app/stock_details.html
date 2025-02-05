@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ stock.name }} - Stock Details</title>
+    <link rel="stylesheet" href="{% static 'css/stock_details_style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/stock_details.js' %}" defer></script>
+</head>
+<body>
+
+    <div class="menu">
+        <a href="#overview">Overview</a>
+        <a href="#forecast">Forecast</a>
+        <a href="#holdings">Holdings</a>
+        <a href="#news">News</a>
+    </div>
+
+    <div id="overview" class="section">
+        <h2>Overview</h2>
+        <p>Name: {{ stock.name }}</p>
+        <p>Current Price: {{ stock.current_price }}</p>
+        <p>High Price: {{ stock.high_price }}</p>
+        <p>Low Price: {{ stock.low_price }}</p>
+    </div>
+
+    <div id="chart-container">
+        <canvas id="priceChart"></canvas>
+    </div>
+
+    <!-- Other sections for forecast, holdings, news -->
+
+</body>
+</html>

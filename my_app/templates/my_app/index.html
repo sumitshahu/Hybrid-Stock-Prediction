@@ -1,0 +1,49 @@
+{% load static %}  <!-- Load static files -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screener</title>
+    <link rel="stylesheet" href="{% static 'css/index_style.css' %}">
+    <script src="{% static 'js/search.js' %}" defer></script>
+</head>
+<body>
+
+    <div class="header">
+        <a href="#">Home</a>
+        <a href="#">Screens</a>
+        <a href="#">Tools</a>
+    </div>
+
+    <div class="container">
+        <div class="title">screener</div>
+        <div class="subtitle">Stock analysis and screening tool for investors in India.</div>
+        
+        <!-- Search box for stocks -->
+        <div class="search-box">
+            <input type="text" id="stockSearch" placeholder="Search for a company">
+            <ul id="stockList"></ul>
+        </div>
+        
+        <div class="suggestions">
+            <a href="#">Coastal Corp</a>
+            <a href="#">Frontier Springs</a>
+            <a href="#">ITD Cem</a>
+            <a href="#">Krishca Strapp.</a>
+            <a href="#">Modison</a>
+            <a href="#">Permanent Magnet</a>
+            <a href="#">Pix Transmission</a>
+            <a href="#">RACL Geartech</a>
+            <a href="#">Sandur Manganese</a>
+            <a href="#">Wanbury</a>
+        </div>
+    </div>
+
+    <div class="top-right">
+        <a href="#">Login</a>
+        <a href="#">Sign Up</a>
+    </div>
+
+</body>
+</html>
