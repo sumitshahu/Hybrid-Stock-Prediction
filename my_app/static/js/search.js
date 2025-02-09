@@ -16,10 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     data.forEach(stock => {
                         const li = document.createElement('li');
                         li.textContent = stock;
+
+                        // Use Django URL pattern dynamically
                         li.addEventListener('click', () => {
-                            // Navigate to the stock details page
-                            window.location.href = `/stock/${stock}/`;
+                            window.location.href = `/stock/${encodeURIComponent(stock)}/`;
                         });
+
                         stockList.appendChild(li);
                     });
 

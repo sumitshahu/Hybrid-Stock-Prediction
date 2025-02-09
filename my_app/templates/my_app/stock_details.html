@@ -4,33 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ stock.name }} - Stock Details</title>
-    <link rel="stylesheet" href="{% static 'css/stock_details_style.css' %}">
+    <title>{{ stock }} - Stock Details</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static 'js/stock_details.js' %}" defer></script>
+    <link rel="stylesheet" href="{% static 'css/stock_details.css' %}">
 </head>
 <body>
+    <div class="container">
+        <h2>{{ stock }}</h2>
 
-    <div class="menu">
-        <a href="#overview">Overview</a>
-        <a href="#forecast">Forecast</a>
-        <a href="#holdings">Holdings</a>
-        <a href="#news">News</a>
+        <div class="price">
+            <strong>Current Price:</strong> <span id="currentPrice">{{ current_price }}</span> INR
+            <span id="marketStatus">({{ market_status }})</span>
+        </div>
+
+        <div class="filters">
+            <button onclick="updateChart('1D')" class="active">1D</button>
+            <button onclick="updateChart('1W')">1W</button>
+            <button onclick="updateChart('1M')">1M</button>
+            <button onclick="updateChart('1Y')">1Y</button>
+            <button onclick="updateChart('Max')">Max</button>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="stockChart"></canvas>
+        </div>
+
+        <div class="forecast">
+            <h3>Forecast</h3>
+            <label for="model">Select Model:</label>
+            <select id="model" class="model-select" onchange="updateForecast()">
+                {% for model in models %}
+                    <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Display the Latest Range Price -->
+            <p><strong>Predicted Price Range ({{ selected_model }} Model):</strong> 
+                <span id="rangePrice">
+                    {% if latest_range_price %}
+                        {{ latest_range_price }} INR
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </span>
+            </p>
+        </div>
     </div>
 
-    <div id="overview" class="section">
-        <h2>Overview</h2>
-        <p>Name: {{ stock.name }}</p>
-        <p>Current Price: {{ stock.current_price }}</p>
-        <p>High Price: {{ stock.high_price }}</p>
-        <p>Low Price: {{ stock.low_price }}</p>
-    </div>
-
-    <div id="chart-container">
-        <canvas id="priceChart"></canvas>
-    </div>
-
-    <!-- Other sections for forecast, holdings, news -->
-
+    <!-- Load JS file for handling stock data and forecast updates -->
+    <script src="{% static 'js/stock_details.js' %}"></script>
 </body>
 </html>
