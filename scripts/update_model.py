@@ -17,7 +17,7 @@ tf.config.run_functions_eagerly(True)
 BASE_DIR = r"C:\Users\sumit\Final year\stock-market-analysis\models"
 
 # Get today's date
-TODAY = TODAY = datetime.today().strftime('%Y-%m-%d')
+TODAY =datetime.today().strftime('%Y-%m-%d')
 
 def get_latest_folder(stock_dir):
     """Find the latest date folder inside the stock directory."""
