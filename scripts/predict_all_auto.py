@@ -10,7 +10,8 @@ from sklearn.preprocessing import MinMaxScaler
 # Base directory where models are stored
 BASE_DIR = r"C:\Users\sumit\Final year\stock-market-analysis\models"
 # Get today's date
-TODAY = datetime.today().strftime('%Y-%m-%d')
+#datetime.today().strftime('%Y-%m-%d')
+TODAY ="2025-04-16"
 
 def get_latest_model_directory(stock_name):
     """Finds the latest date directory for a given stock."""
@@ -62,7 +63,7 @@ def load_models_and_scaler(stock_name):
 def load_stock_data(stock_symbol, time_steps=60):
     """Load last 60 days of stock data from Yahoo Finance."""
     try:
-        data = yf.download(stock_symbol, period="60d", interval="1d")[['Close', 'High', 'Low', 'Volume']]
+        data = yf.download(stock_symbol,period="60d", interval="1d")[['Close', 'High', 'Low', 'Volume']]
         if data.empty:
             print(f"No data available for {stock_symbol}")
             return None
@@ -128,6 +129,32 @@ def predict_tomorrow(stock_symbol):
     lower_bound_lstm, upper_bound_lstm = calculate_range(data, pred_lstm_actual)
     lower_bound_gru, upper_bound_gru = calculate_range(data, pred_gru_actual)
     lower_bound_ensemble, upper_bound_ensemble = calculate_range(data, pred_ensemble_actual)
+    
+    # RNN_MODEL_PATH ="C:\Users\sumit\Final year\stock-market-analysis\RNN_Models"
+    # # Load Pre-trained Sentiment Model for Stock
+    # model_path = f"/content/sentiment_model_{stock}.h5"
+    # # Custom objects to handle the 'mean_squared_error' loss function during loading
+    # custom_objects = {'mse': MeanSquaredError()}  
+    # model = tf.keras.models.load_model(model_path, custom_objects=custom_objects)
+
+    # # Example Sentiment Score (computed using BERT & VADER)
+    # #sentiment_score = np.array([0.75])  # Replace with actual computed score
+    # sentiment_score = sentiment_score.reshape(1, 1, 1)  # Reshape for LSTM input
+
+    # # Predict Sentiment using RNN model
+    # predicted_sentiment = model.predict(sentiment_score)
+    # adjustment_factor = 1 + (sentiment_score)
+ 
+    # # Adjust the bounds
+    # new_lower_bound_lstm = lower_bound_lstm * adjustment_factor
+    # new_upper_bound_lstm = upper_bound_lstm * adjustment_factor
+
+    # new_lower_bound_gru = lower_bound_gru * adjustment_factor
+    # new_upper_bound_gru = upper_bound_gru * adjustment_factor
+
+    # new_lower_bound_ensemble = lower_bound_ensemble* adjustment_factor
+    # new_upper_bound_ensemble = upper_bound_ensemble * adjustment_factor
+    
 
     # Store results in a dictionary
     prediction_results = {

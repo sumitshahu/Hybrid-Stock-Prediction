@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 20px;
+    margin: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chart-block {
+    margin-bottom: 40px;
+}
+
+canvas {
+    width: 100% !important;
+    height: 400px !important;
+}
+
+h2, h3 {
+    color: #333;
+}
+
+p {
+    font-weight: bold;
+    margin-top: 10px;
+}

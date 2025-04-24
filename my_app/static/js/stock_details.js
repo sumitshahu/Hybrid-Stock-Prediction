@@ -94,21 +94,21 @@ function fetchLivePrice() {
 
 // Fetch the range price for the selected model
 function updateForecast() {
-    let selectedModel = document.getElementById("model").value;
+    const selectedModel = document.getElementById("model").value;
+    const stockName = document.getElementById("stockName").value;  // Use a hidden input to pass stock name
 
-    // Send AJAX request to get the range price for the selected model
-    fetch(`/stock/{{ stock }}/?model=${selectedModel}`, {
-        method: 'GET',
+    fetch(`/stock/${stockName}/?model=${selectedModel}`, {
         headers: {
-            'Content-Type': 'application/json'
+            'X-Requested-With': 'XMLHttpRequest'  // Important for Django to identify AJAX
         }
     })
     .then(response => response.json())
     .then(data => {
+        const forecastElement = document.getElementById("rangePrice");
         if (data.range_price) {
-            document.getElementById("rangePrice").innerText = `${data.range_price} INR`;
+            forecastElement.innerText = `${data.range_price} INR`;
         } else {
-            document.getElementById("rangePrice").innerText = "N/A";
+            forecastElement.innerText = "N/A";
         }
     })
     .catch(error => {
@@ -116,6 +116,7 @@ function updateForecast() {
         document.getElementById("rangePrice").innerText = "Error";
     });
 }
+
 
 // Load initial data
 fetchStockData('1D');

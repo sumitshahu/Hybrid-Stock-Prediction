@@ -17,18 +17,22 @@
             <span id="marketStatus">({{ market_status }})</span>
         </div>
 
+        <!-- Time Range Buttons for Chart -->
         <div class="filters">
             <button onclick="updateChart('1D')" class="active">1D</button>
             <button onclick="updateChart('1W')">1W</button>
             <button onclick="updateChart('1M')">1M</button>
             <button onclick="updateChart('1Y')">1Y</button>
-            <button onclick="updateChart('Max')">Max</button>
+            <button onclick="updateChart('max')">Max</button>
         </div>
 
+        <!-- Chart Container -->
         <div class="chart-container">
+            <div id="loadingMessage" style="text-align:center; display:none;">Loading chart...</div>
             <canvas id="stockChart"></canvas>
         </div>
 
+        <!-- Forecast Section -->
         <div class="forecast">
             <h3>Forecast</h3>
             <label for="model">Select Model:</label>
@@ -38,8 +42,7 @@
                 {% endfor %}
             </select>
 
-            <!-- Display the Latest Range Price -->
-            <p><strong>Predicted Price Range ({{ selected_model }} Model):</strong> 
+            <p><strong>Predicted Price Range (<span id="modelName">{{ selected_model }}</span> Model):</strong> 
                 <span id="rangePrice">
                     {% if latest_range_price %}
                         {{ latest_range_price }} INR
@@ -51,7 +54,109 @@
         </div>
     </div>
 
-    <!-- Load JS file for handling stock data and forecast updates -->
-    <script src="{% static 'js/stock_details.js' %}"></script>
+    
+
+    <!-- Scripts -->
+    <script>
+        let stockChart = null;
+
+        function updateChart(range = '1D') {
+            document.getElementById("loadingMessage").style.display = "block";
+
+            fetch(`/api/stock_data/{{ stock }}?range=${range}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error);
+                        return;
+                    }
+
+                    const ctx = document.getElementById("stockChart").getContext("2d");
+
+                    if (stockChart) {
+                        stockChart.destroy();
+                    }
+
+                    stockChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.timestamps,
+                            datasets: [{
+                                label: 'Price',
+                                data: data.prices,
+                                borderColor: '#3e95cd',
+                                fill: false,
+                                tension: 0.3
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    ticks: {
+                                        callback: function(value, index) {
+                                            const label = this.getLabelForValue(index);
+                                            return data.x_labels.includes(label) ? label : '';
+                                        },
+                                        autoSkip: false,
+                                        maxRotation: 45,
+                                        minRotation: 0
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: false,
+                                    title: {
+                                        display: true,
+                                        text: 'Price (INR)'
+                                    }
+                                }
+                            },
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: true
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Chart fetch error:", error);
+                })
+                .finally(() => {
+                    document.getElementById("loadingMessage").style.display = "none";
+                });
+        }
+
+        function updateForecast() {
+            const selectedModel = document.getElementById("model").value;
+
+            fetch(`/stock/{{ stock }}?model=${selectedModel}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.range_price) {
+                    document.getElementById("rangePrice").innerText = `${data.range_price} INR`;
+                } else {
+                    document.getElementById("rangePrice").innerText = "N/A";
+                }
+
+                document.getElementById("modelName").innerText = selectedModel;
+                document.getElementById("model").value = selectedModel;
+            })
+            .catch(error => {
+                console.error("Forecast fetch error:", error);
+                document.getElementById("rangePrice").innerText = "Error";
+            });
+        }
+
+      
+
+        document.addEventListener('DOMContentLoaded', function () {
+            updateChart('1D');
+        });
+    </script>
 </body>
 </html>

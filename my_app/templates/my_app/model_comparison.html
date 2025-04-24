@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Model Comparison - {{ stock }}</title>
+    <link rel="stylesheet" href="{% static 'css/model_comparison.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Model Comparison for {{ stock }} (Last 100 Days)</h2>
+        
+        <div class="chart-block">
+            <h3>Ensemble vs Actual</h3>
+            <canvas id="ensembleChart"></canvas>
+            <p id="ensembleAccuracy"></p>
+        </div>
+
+        <div class="chart-block">
+            <h3>LSTM vs Actual</h3>
+            <canvas id="lstmChart"></canvas>
+            <p id="lstmAccuracy"></p>
+        </div>
+
+        <div class="chart-block">
+            <h3>GRU vs Actual</h3>
+            <canvas id="gruChart"></canvas>
+            <p id="gruAccuracy"></p>
+        </div>
+
+        <div class="chart-block">
+            <h3>Ensemble vs LSTM vs GRU</h3>
+            <canvas id="allModelChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const stockName = "{{ stock }}";
+
+            fetch(`/stock/${stockName}/comparison_data/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data || data.error) {
+                        alert("Error fetching model comparison data.");
+                        return;
+                    }
+
+                    const labels = data.dates;
+
+                    const drawChart = (id, labels, datasets) => {
+                        const ctx = document.getElementById(id).getContext("2d");
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels,
+                                datasets
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { position: 'top' },
+                                    title: { display: false }
+                                }
+                            }
+                        });
+                    };
+
+                    drawChart("ensembleChart", labels, [
+                        {
+                            label: "Ensemble Prediction",
+                            data: data.ensemble,
+                            borderColor: "blue",
+                            fill: false
+                        },
+                        {
+                            label: "Actual Price",
+                            data: data.actual,
+                            borderColor: "black",
+                            borderDash: [5, 5],
+                            fill: false
+                        }
+                    ]);
+
+                    drawChart("lstmChart", labels, [
+                        {
+                            label: "LSTM Prediction",
+                            data: data.lstm,
+                            borderColor: "green",
+                            fill: false
+                        },
+                        {
+                            label: "Actual Price",
+                            data: data.actual,
+                            borderColor: "black",
+                            borderDash: [5, 5],
+                            fill: false
+                        }
+                    ]);
+
+                    drawChart("gruChart", labels, [
+                        {
+                            label: "GRU Prediction",
+                            data: data.gru,
+                            borderColor: "orange",
+                            fill: false
+                        },
+                        {
+                            label: "Actual Price",
+                            data: data.actual,
+                            borderColor: "black",
+                            borderDash: [5, 5],
+                            fill: false
+                        }
+                    ]);
+
+                    drawChart("allModelChart", labels, [
+                        {
+                            label: "Ensemble",
+                            data: data.ensemble,
+                            borderColor: "blue",
+                            fill: false
+                        },
+                        {
+                            label: "LSTM",
+                            data: data.lstm,
+                            borderColor: "green",
+                            fill: false
+                        },
+                        {
+                            label: "GRU",
+                            data: data.gru,
+                            borderColor: "orange",
+                            fill: false
+                        },
+                        {
+                            label: "Actual Price",
+                            data: data.actual,
+                            borderColor: "black",
+                            borderDash: [5, 5],
+                            fill: false
+                        }
+                    ]);
+
+                    // Display accuracy
+                    document.getElementById("ensembleAccuracy").innerText = `Accuracy: ${data.accuracy.ensemble}%`;
+                    document.getElementById("lstmAccuracy").innerText = `Accuracy: ${data.accuracy.lstm}%`;
+                    document.getElementById("gruAccuracy").innerText = `Accuracy: ${data.accuracy.gru}%`;
+                });
+        });
+    </script>
+</body>
+</html>

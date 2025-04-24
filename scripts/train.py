@@ -23,7 +23,7 @@ def prepare_input_data(data, time_steps=60):
     return np.array(X), np.array(y)
 
 # Stock details
-stock_symbol = "RELIANCE.NS"
+stock_symbol = "HDFCBANK.NS"
 start_date = "2022-01-01"
 end_date = "2025-02-05"
 

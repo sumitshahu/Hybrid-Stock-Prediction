@@ -17,7 +17,7 @@ tf.config.run_functions_eagerly(True)
 BASE_DIR = r"C:\Users\sumit\Final year\stock-market-analysis\models"
 
 # Get today's date
-TODAY =datetime.today().strftime('%Y-%m-%d')
+TODAY ="2025-04-21"  # datetime.today().strftime('%Y-%m-%d')
 
 def get_latest_folder(stock_dir):
     """Find the latest date folder inside the stock directory."""
@@ -38,8 +38,22 @@ def load_scaler(scaler_path):
 def fetch_latest_data(stock_name):
     """Fetch the last 60 days of stock data, including today's data if available."""
     
-    # Fetch last 90 days (to ensure market open days are covered)
-    stock_data = yf.download(stock_name, period="90d")  # Ensures at least 60 market days
+    # # Fetch last 90 days (to ensure market open days are covered)
+    # stock_data = yf.download(stock_name, period="90d")  # Ensures at least 60 market days
+
+    
+    end_date = "2025-04-21"
+    start_date = pd.to_datetime(end_date) - pd.Timedelta(days=91)
+
+    # Download data
+    stock_data = yf.download("RELIANCE.NS", start=start_date.strftime('%Y-%m-%d'), end=(pd.to_datetime(end_date) + pd.Timedelta(days=1)).strftime('%Y-%m-%d'))
+
+    last_row_date = stock_data.index[-1].strftime('%Y-%m-%d')
+
+
+
+
+
     
     if stock_data.empty:
         print(f" No data found for {stock_name}. Skipping update.")
@@ -57,7 +71,7 @@ def fetch_latest_data(stock_name):
     if len(stock_data) < 61:
         print(f" Not enough data for {stock_name} (Only {len(stock_data)} rows). Skipping update.")
         return None
-    return stock_data.tail(61)  # Ensure exactly 60 time steps
+    return stock_data.tail(61)# Ensure exactly 60 time steps
 
 
 
@@ -70,7 +84,7 @@ def retrain_models(stock_name):
         return
 
     latest_path = os.path.join(stock_dir, latest_folder)
-    today_path = os.path.join(stock_dir, TODAY)
+    today_path = os.path.join(stock_dir,TODAY)
     os.makedirs(today_path, exist_ok=True)
 
     print(f" Using models from directory: {latest_path} for {stock_name}")  #  Print Model Directory
@@ -94,11 +108,12 @@ def retrain_models(stock_name):
         return
 
     # Fetch new data
-    stock_data = fetch_latest_data(stock_name)
+    stock_data= fetch_latest_data(stock_name)
     if stock_data is None or stock_data.empty:
         print(f" No new data fetched for {stock_name}. Skipping.")
         return
-
+    today_path = os.path.join(stock_dir,"2025-04-21")
+    os.makedirs(today_path, exist_ok=True)
     stock_data_scaled = scaler.transform(stock_data)
 
     # Extract X (features) and y (target)
