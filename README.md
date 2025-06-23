@@ -1,6 +1,27 @@
-# Stock Market Analysis
+# Sentiment-Infused Stock Price Prediction
 
-This is a Django project for analyzing stock market data. It provides tools and functionalities to visualize and interpret stock market trends and statistics.
+A robust hybrid model to predict the next day’s closing price range for individual stocks using a deep learning ensemble approach.
+
+🔹 Key Highlights:
+
+Model Architecture: Integrated LSTM and GRU models in an ensemble framework to enhance forecast accuracy and generalization.
+
+Stock-specific Models: Trained separate models for each stock using the past 4 years of historical data to capture individual market behavior patterns.
+
+Time-Series Strategy: Used a 60-day price window as input to forecast the next day's closing price range.
+
+Sentiment Integration: Incorporated news sentiment analysis to account for real-time market sentiment and improve prediction reliability.
+
+Ensemble Output: Combined predictions from LSTM, GRU, and a meta-model to generate a more stable and accurate forecast.
+
+🔧 Tech Stack: Python, TensorFlow/Keras, Scikit-learn, NLTK/VADER, Pandas, NumPy, Matplotlib, yFinance API
+
+![Model Architecture](images/diagram.png)
+[Home Page](images/home.png)
+[Example- Reliance NSE Stock graph](images/example.png)
+[Example- Reliance NSE Stock prediction](images/example2.png)
+
+
 
 ## Project Structure
 
