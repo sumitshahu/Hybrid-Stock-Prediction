@@ -18,7 +18,7 @@ Ensemble Output: Combined predictions from LSTM, GRU, and a meta-model to genera
 
 ![Model Architecture](images/diagram.png)
 ![Home Page](images/home.png)
-![Example- Reliance NSE Stock graph](images/example.png)
+![Example- Reliance NSE Stock graph](images/example1.png)
 ![Example- Reliance NSE Stock prediction](images/example2.png)
 
 
