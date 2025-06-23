@@ -17,9 +17,9 @@ Ensemble Output: Combined predictions from LSTM, GRU, and a meta-model to genera
 🔧 Tech Stack: Python, TensorFlow/Keras, Scikit-learn, NLTK/VADER, Pandas, NumPy, Matplotlib, yFinance API
 
 ![Model Architecture](images/diagram.png)
-[Home Page](images/home.png)
-[Example- Reliance NSE Stock graph](images/example.png)
-[Example- Reliance NSE Stock prediction](images/example2.png)
+![Home Page](images/home.png)
+![Example- Reliance NSE Stock graph](images/example.png)
+![Example- Reliance NSE Stock prediction](images/example2.png)
 
 
 
